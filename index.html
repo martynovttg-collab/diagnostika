@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Диагностика системы управления — Management OS</title>
+<meta name="description" content="Бесплатная диагностика зрелости системы управления компанией: 27 вопросов, 7 зон, заключение в PDF.">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Диагностика системы управления — Management OS">
+<meta property="og:description" content="Бесплатная диагностика зрелости системы управления компанией: 27 вопросов, 7 зон, заключение в PDF.">
+</head>
+<body>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F2F4F3; --surface:#FFFFFF; --surface-2:#E7EBEA; --ink:#152220; --ink-soft:#4B5A57;
+  --line:#D3DAD8; --accent:#2F6F6B; --accent-ink:#FFFFFF; --accent-soft:#DCEAE8;
+  --strong:#3E7A54; --mid:#B98A2E; --weak:#C1703A; --crit:#A63B34;
+  --strong-bg:#E4F0E7; --mid-bg:#F5ECDA; --weak-bg:#F6E3D6; --crit-bg:#F2DBD8;
+  --shadow: 0 1px 2px rgba(21,34,32,.06), 0 8px 24px -12px rgba(21,34,32,.18);
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1717; --surface:#182322; --surface-2:#20302E; --ink:#E8EDEC; --ink-soft:#AAB8B5;
+    --line:#2B3B39; --accent:#5AB3AC; --accent-ink:#0B1615; --accent-soft:#1E3634;
+    --strong:#6BBE85; --mid:#DCAE55; --weak:#DE9160; --crit:#E1685D;
+    --strong-bg:#1C2E22; --mid-bg:#332A18; --weak-bg:#33221A; --crit-bg:#331E1B;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px -16px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1717; --surface:#182322; --surface-2:#20302E; --ink:#E8EDEC; --ink-soft:#AAB8B5;
+  --line:#2B3B39; --accent:#5AB3AC; --accent-ink:#0B1615; --accent-soft:#1E3634;
+  --strong:#6BBE85; --mid:#DCAE55; --weak:#DE9160; --crit:#E1685D;
+  --strong-bg:#1C2E22; --mid-bg:#332A18; --weak-bg:#33221A; --crit-bg:#331E1B;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px -16px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;}
+body{background:var(--paper); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif; margin:0; padding:0; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px; margin:0 auto; padding:28px 20px 80px;}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+h1,h2,h3{font-family:"Lora",Georgia,serif; font-weight:600; text-wrap:balance; margin:0 0 10px;}
+h1{font-size:clamp(26px,4.2vw,36px); line-height:1.15;}
+h2{font-size:22px; line-height:1.25;}
+h3{font-size:17px; line-height:1.3; font-weight:600;}
+p{line-height:1.55; margin:0 0 14px; color:var(--ink);}
+.muted{color:var(--ink-soft);}
+small.muted{font-size:13px;}
+a{color:var(--accent);}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;}
+
+/* header / progress ruler */
+.rule-header{position:sticky; top:0; z-index:20; background:var(--paper); padding:14px 20px 10px; border-bottom:1px solid var(--line);}
+.rule-header-inner{max-width:760px; margin:0 auto;}
+.rule-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+.brand{font-family:"Lora",serif; font-weight:600; font-size:15px;}
+.brand .sp{color:var(--accent);}
+.stepnote{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-soft);}
+.ruler{display:flex; gap:4px;}
+.ruler i{flex:1; height:5px; border-radius:3px; background:var(--surface-2); overflow:hidden; position:relative;}
+.ruler i b{position:absolute; inset:0; background:var(--accent); transform:scaleX(var(--f,0)); transform-origin:left; display:block; border-radius:3px; transition:transform .35s ease;}
+
+/* card */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px; box-shadow:var(--shadow);}
+.screen{animation:rise .38s ease both;}
+@keyframes rise{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+@media (prefers-reduced-motion: reduce){.screen{animation:none;}}
+
+/* buttons */
+.btnrow{display:flex; gap:12px; margin-top:22px; flex-wrap:wrap;}
+button, .btn{font-family:"IBM Plex Sans",sans-serif; font-weight:600; font-size:15px; border-radius:10px; padding:13px 22px; border:1px solid transparent; cursor:pointer; transition:transform .12s ease, background .15s ease, border-color .15s ease; text-decoration:none; display:inline-flex; align-items:center; gap:8px;}
+button:focus-visible, .btn:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.btn-primary{background:var(--accent); color:var(--accent-ink); box-shadow:var(--shadow);}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.45; cursor:not-allowed; transform:none;}
+.btn-ghost{background:transparent; color:var(--ink); border-color:var(--line);}
+.btn-ghost:hover{border-color:var(--accent); color:var(--accent);}
+
+/* intro */
+.principle{background:var(--accent-soft); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:10px; padding:16px 18px; margin:18px 0;}
+.metarow{display:flex; gap:22px; flex-wrap:wrap; margin:20px 0 6px; font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-soft);}
+.metarow b{color:var(--ink); display:block; font-family:"Lora",serif; font-size:15px; font-weight:600;}
+
+/* form fields */
+.field{margin-bottom:18px;}
+.field label{display:block; font-weight:600; font-size:14.5px; margin-bottom:7px;}
+.field .qcode{font-family:"IBM Plex Mono",monospace; color:var(--accent); margin-right:8px; font-size:13px;}
+select, input[type=text], input[type=email], textarea{
+  width:100%; font-family:"IBM Plex Sans",sans-serif; font-size:14.5px; color:var(--ink);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:12px 14px;
+  appearance:none; -webkit-appearance:none; line-height:1.4;
+}
+textarea{resize:vertical; min-height:70px; font-size:14px;}
+.selectwrap{position:relative;}
+.selectwrap::after{content:"⌄"; position:absolute; right:14px; top:50%; transform:translateY(-58%); font-size:16px; color:var(--ink-soft); pointer-events:none;}
+select{padding-right:38px;}
+.field.unanswered select{border-color:var(--weak);}
+
+/* zone header */
+.zonehead{display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+.zonenum{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); background:var(--surface-2); border-radius:6px; padding:3px 8px;}
+
+/* result bits */
+.scoreband{display:flex; align-items:baseline; gap:14px; margin:6px 0 18px;}
+.scorebig{font-family:"Lora",serif; font-weight:700; font-size:52px; line-height:1;}
+.scoreof{font-family:"IBM Plex Mono",monospace; color:var(--ink-soft); font-size:15px;}
+.zonebars{display:flex; flex-direction:column; gap:10px; margin:14px 0 6px;}
+.zonebar-row{display:grid; grid-template-columns:150px 1fr 46px; gap:10px; align-items:center;}
+.zonebar-name{font-size:13.5px; font-weight:600;}
+.zonebar-track{height:10px; background:var(--surface-2); border-radius:6px; overflow:hidden;}
+.zonebar-fill{height:100%; border-radius:6px;}
+.zonebar-pct{font-family:"IBM Plex Mono",monospace; font-size:12.5px; text-align:right; color:var(--ink-soft);}
+
+.tag{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; font-weight:600; letter-spacing:.03em; padding:3px 9px; border-radius:20px; text-transform:uppercase;}
+.tag.strong{background:var(--strong-bg); color:var(--strong);}
+.tag.mid{background:var(--mid-bg); color:var(--mid);}
+.tag.weak{background:var(--weak-bg); color:var(--weak);}
+.tag.crit{background:var(--crit-bg); color:var(--crit);}
+
+.callout{border-radius:12px; padding:18px 20px; margin:16px 0; border:1px solid var(--line);}
+.callout.risk{background:var(--crit-bg); border-color:var(--crit);}
+.callout.route{background:var(--accent-soft); border-color:var(--accent);}
+.callout h3{margin-bottom:6px;}
+.callout.risk h3{color:var(--crit);}
+.callout.route h3{color:var(--accent);}
+
+.list-clean{list-style:none; margin:0 0 14px; padding:0; display:flex; flex-direction:column; gap:10px;}
+.list-clean li{padding:12px 14px; background:var(--surface-2); border-radius:10px; font-size:14.5px; line-height:1.45;}
+.list-clean li b{display:block; font-size:13px; text-transform:uppercase; letter-spacing:.03em; margin-bottom:3px; font-family:"IBM Plex Mono",monospace; font-weight:600;}
+.list-clean.checks li{background:transparent; border:1px solid var(--line);}
+.list-clean.checks li:before{content:"→ "; color:var(--accent); font-weight:700;}
+
+hr.sep{border:none; border-top:1px solid var(--line); margin:26px 0;}
+.note{font-size:13px; color:var(--ink-soft); background:var(--surface-2); border-radius:10px; padding:12px 14px; line-height:1.5;}
+.footer-note{margin-top:34px; text-align:center;}
+.contact-row{display:flex; gap:12px; flex-wrap:wrap;}
+.contact-row .field{flex:1; min-width:200px;}
+.err{color:var(--crit); font-size:13px; margin-top:-10px; margin-bottom:14px; display:none;}
+.err.show{display:block;}
+.toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(120%); background:var(--ink); color:var(--paper); padding:10px 18px; border-radius:9px; font-size:13.5px; transition:transform .25s ease; z-index:50;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.qa-block{margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--line);}
+.qa-block:last-child{border-bottom:none;}
+
+.scoreline{color:var(--ink-soft); font-size:13px; margin:-4px 0 18px;}
+.minor-actions{margin:10px 0 0; font-size:13px; color:var(--ink-soft); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.linkbtn{background:none; border:none; padding:0; font-size:13px; color:var(--ink-soft); text-decoration:underline; cursor:pointer; font-family:"IBM Plex Sans",sans-serif;}
+.linkbtn:hover{color:var(--accent);}
+.sepdot{color:var(--line);}
+
+/* ---------- ВОПРОС И ВАРИАНТЫ ОТВЕТА ---------- */
+.zonelead{color:var(--ink-soft); font-size:14.5px; margin:0 0 14px; max-width:62ch;}
+.qtext{font-size:clamp(19px,2.6vw,23px); line-height:1.32; margin:0 0 20px; max-width:60ch;}
+.opts{display:flex; flex-direction:column; gap:10px;}
+.opt{display:grid; grid-template-columns:30px 1fr; gap:12px; align-items:start; width:100%; text-align:left;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:15px 17px;
+  font-family:"IBM Plex Sans",sans-serif; font-size:15px; line-height:1.55; color:var(--ink);
+  cursor:pointer; transition:border-color .15s ease, background .15s ease, transform .1s ease;}
+.opt:hover{border-color:var(--accent);}
+.opt:active{transform:scale(.995);}
+.opt-mark{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
+  border:1.5px solid var(--line); font-size:12.5px; font-weight:600; color:var(--ink-soft); flex:none; margin-top:1px;}
+.opt.sel{border-color:var(--accent); background:var(--accent-soft);}
+.opt.sel .opt-mark{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.opts.unanswered .opt{border-color:var(--crit);}
+@media (max-width:600px){
+  .opt{font-size:14.5px; padding:13px 14px; grid-template-columns:26px 1fr; gap:10px;}
+  .qtext{font-size:18px; margin-bottom:16px;}
+  .zonelead{font-size:13.5px; margin-bottom:12px;}
+}
+
+/* ---------- ЛЕПЕСТКОВАЯ ДИАГРАММА ---------- */
+.radar-wrap{display:flex; gap:22px; align-items:center; flex-wrap:wrap; margin:18px 0 6px;}
+.radar{flex:1 1 300px; max-width:420px;}
+.radar text{font-family:"IBM Plex Sans",sans-serif; fill:var(--ink-soft);}
+.radar .grid{fill:none; stroke:var(--line);}
+.radar .shape{fill:var(--accent); fill-opacity:.16; stroke:var(--accent); stroke-width:2; stroke-linejoin:round;}
+.radar .pt{fill:var(--accent);}
+.radar-legend{flex:1 1 220px; display:flex; flex-direction:column; gap:7px; min-width:210px;}
+.radar-legend div{display:flex; justify-content:space-between; gap:12px; font-size:13.5px; border-bottom:1px solid var(--line); padding-bottom:5px;}
+.radar-legend b{font-family:"IBM Plex Mono",monospace; font-weight:600; flex:none;}
+
+/* ---------- ЗАКЛЮЧЕНИЕ ---------- */
+.concl-intro{margin:22px 0 6px;}
+.conclusion{margin-top:22px;}
+.concl-head{border:1px solid var(--line); border-radius:var(--radius); padding:18px 18px 14px; background:var(--surface-2); margin-bottom:26px; display:none;} /* титул документа — только для PDF */
+.concl-meta{font-size:11px; letter-spacing:.08em; color:var(--ink-soft); text-transform:uppercase; margin-bottom:10px;}
+.concl-title{margin:0 0 6px; font-size:23px; line-height:1.25;}
+.concl-scoreline{font-size:12.5px; color:var(--ink-soft); margin-bottom:14px;}
+.concl-profile{width:100%; border-collapse:collapse; font-size:13px;}
+.concl-profile td{padding:4px 8px 4px 0; vertical-align:top;}
+.concl-profile td:nth-child(odd){color:var(--ink-soft); white-space:nowrap; width:1%;}
+.concl-sectiontitle{margin-top:30px; padding-top:14px; border-top:2px solid var(--line);}
+.concl-zone{margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+.concl-zone:last-of-type{border-bottom:none;}
+.concl-zone h3{margin-bottom:6px;}
+.concl-tag{font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px; border-radius:20px; vertical-align:middle; margin-left:6px;}
+.concl-tag.strong{background:var(--strong-bg); color:var(--strong);}
+.concl-tag.mid{background:var(--mid-bg); color:var(--mid);}
+.concl-tag.weak{background:var(--weak-bg); color:var(--weak);}
+.concl-verdict{font-size:15.5px; margin:6px 0 12px;}
+.concl-line{margin:8px 0; font-size:14.5px; line-height:1.6;}
+.concl-line.weak{border-left:3px solid var(--weak); padding-left:11px;}
+.concl-risk{background:var(--crit-bg); border-left:3px solid var(--crit); border-radius:0 8px 8px 0; padding:11px 14px; margin:12px 0; font-size:14px; line-height:1.6;}
+.concl-appendix{margin-top:28px; border:1px solid var(--line); border-radius:var(--radius); padding:12px 16px;}
+.concl-appendix summary{cursor:pointer; font-weight:600; font-size:14.5px;}
+.concl-app-table{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:12px;}
+.concl-app-table td{padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top;}
+.concl-app-table td:first-child{width:44px; color:var(--ink-soft);}
+.concl-app-table td:last-child{width:38%;}
+.concl-app-zone td{background:var(--surface-2); font-weight:600; font-size:13px;}
+.concl-note{margin-top:24px;}
+
+/* ---------- ПЕЧАТЬ / PDF ---------- */
+@media print{
+  @page{ size:A4; margin:16mm 14mm; }
+  :root{ --paper:#fff; --surface:#fff; --surface-2:#F2F4F3; --ink:#111; --ink-soft:#555; --line:#CCC; }
+  html,body{background:#fff !important; color:#111 !important;}
+  .rule-header, .toast, .btnrow, .no-print, .footer-note, .zonebars, .scoreband, .minor-actions, .scoreline{display:none !important;}
+  .wrap{max-width:none; padding:0;}
+  .screen.card{box-shadow:none !important; border:none !important; padding:0 !important; margin:0 !important; background:#fff !important;}
+  .screen.card > h2, .screen.card > .eyebrow, .screen.card > .callout, .screen.card > ul, .screen.card > p.scoreline,
+  .screen.card > h3:not(.concl-sectiontitle), .screen.card > .note, .screen.card > hr,
+  .concl-intro{display:none !important;}   /* в PDF уходит только само заключение */
+  .conclusion{display:block !important; margin:0;}
+  .concl-head{display:block !important; border:2px solid #111; background:#fff; page-break-after:avoid;}
+  .concl-title{font-size:21px;}
+  .concl-zone{border-bottom:1px solid #DDD; margin-bottom:14px; padding-bottom:12px;}
+  .concl-zone h3, .concl-verdict{page-break-after:avoid;}
+  .concl-line, .concl-risk, .checks li, .concl-head{page-break-inside:avoid;}
+  h3{page-break-after:avoid;}
+  .concl-sectiontitle{border-top:none; padding-top:0;}
+  .concl-sectiontitle.pagebreak{page-break-before:always;}
+  p{orphans:2; widows:2;}
+  .concl-appendix{page-break-before:always; border:none; padding:0;}
+  .concl-appendix summary{list-style:none; font-size:16px; font-family:"Lora",Georgia,serif;}
+  .concl-appendix summary::-webkit-details-marker{display:none;}
+  .concl-app-table{font-size:10.5px;}
+  .concl-app-table tr{page-break-inside:avoid;}
+  .concl-risk{background:#F7EAE8 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .concl-tag{border:1px solid #999; background:#fff !important; color:#111 !important;}
+  a{text-decoration:none; color:#111;}
+}
+
+/* ---------- риски, код результата, приглашение ---------- */
+body{margin:0;}
+.concl-risk.mid{background:var(--mid-bg); border-left-color:var(--mid);}
+.concl-risk.ok{background:var(--strong-bg); border-left-color:var(--strong);}
+.concl-risk .rk-tag{display:block; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--crit); margin-bottom:3px;}
+.concl-risk.mid .rk-tag{color:var(--mid);} .concl-risk.ok .rk-tag{color:var(--strong);}
+.invite{border:1px solid var(--accent); background:var(--accent-soft); border-radius:12px; padding:18px 20px; margin:26px 0 8px;}
+.invite h3{margin:0 0 8px; color:var(--accent);}
+.invite p{margin:0 0 12px;}
+.codebox{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; background:var(--surface); border:1px dashed var(--accent); border-radius:10px; padding:12px 14px; margin:4px 0 12px;}
+.codebox span{font-size:12.5px; color:var(--ink-soft);}
+.codebox b{font-size:19px; letter-spacing:.05em; color:var(--ink); word-break:normal; overflow-wrap:normal;}
+.invite .small{font-size:13px; color:var(--ink-soft); margin:0;}
+.authors{margin:22px 0 4px; padding-top:18px; border-top:1px solid var(--line);}
+.authors .al{font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 12px;}
+.authors .ag{display:grid; grid-template-columns:1fr 1fr; gap:16px 22px;}
+.authors .ap{min-width:0;}
+.authors .an{font-family:"Lora",Georgia,serif; font-weight:600; font-size:17px; color:var(--ink); margin:0;}
+.authors .ar{font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); font-weight:600; margin:2px 0 6px;}
+.authors .ad{font-size:13.5px; line-height:1.5; color:var(--ink-soft); margin:0;}
+.authors.inpdf{margin:22px 0 0;}
+@media (max-width:560px){ .authors .ag{grid-template-columns:1fr;} }
+.code-input{font-family:"IBM Plex Mono",monospace !important; font-size:18px !important; letter-spacing:.05em; text-transform:uppercase;}
+@media print{ .invite{background:#fff !important; border:2px solid #2F6F6B;} .codebox{border:1px dashed #2F6F6B;} }
+</style>
+
+<div class="rule-header"><div class="rule-header-inner">
+  <div class="rule-top">
+    <div class="brand">Management OS <span class="sp">/</span> Stress&nbsp;Test</div>
+    <div class="stepnote" id="stepnote"></div>
+  </div>
+  <div class="ruler" id="ruler"></div>
+</div></div>
+
+<div class="wrap"><div id="app"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   CONFIG — измените под себя
+   ========================================================= */
+const CONFIG = {
+  telegram: "ecmen11"   // Telegram для записи на разбор
+};
+
+/* =========================================================
+   DATA — вопросы, зоны, веса (MOS-EST-03, редакция 4.1)
+   ========================================================= */
+const LETTER_VALUE = { A:2, B:1, C:0 };
+
+const PROFILE_QUESTIONS = [
+  { code:"PR1", label:"Ваша роль", options:[
+    ["owner","Собственник"], ["owner_ceo","Собственник и CEO"], ["hired_ceo","Наёмный CEO"], ["other","Другое"]
+  ]},
+  { code:"PR2", label:"Численность сотрудников", options:[
+    ["lt20","до 20"], ["21-50","21–50"], ["51-200","51–200"], ["201-500","201–500"], ["500+","500 и более"]
+  ]},
+  { code:"PR3", label:"Возраст бизнеса", options:[
+    ["lt2","до 2 лет"], ["3-5","3–5 лет"], ["6-10","6–10 лет"], ["10+","10+ лет"]
+  ]},
+  { code:"PR4", label:"Тип бизнеса", options:[
+    ["services","Услуги"], ["trade","Торговля"], ["production","Производство"], ["construction","Строительство"], ["it","IT"], ["other","Другое"]
+  ]},
+  { code:"PR5", label:"Юридическая структура", options:[
+    ["single","Одно юрлицо"], ["few","Два-три связанных юрлица"], ["holding","Холдинговая структура (несколько юрлиц, ИП, SPV)"]
+  ]},
+];
+
+function zone(key,title,subtitle,weight,questions){ return {key,title,subtitle,weight,questions}; }
+function q(code,label,text,options,check){ return {code,label,text,options,check}; }
+
+const ZONES = [
+  zone("strategy","Стратегия","Есть ли у бизнеса ясное видение, измеримые цели на среднесрок и расчёт того, что нужно для роста",13,[
+    q("S01","Миссия и стратегическое видение","Сформированы ли у компании миссия и стратегическое видение — куда и зачем движется бизнес в ближайшие 3-5 лет?",[
+      ["A","Миссия и видение сформулированы и зафиксированы в стратегии развития, ими владеет вся команда, и они реально влияют на решения."],
+      ["B","Миссия или видение есть, но фрагментарно: не зафиксированы, известны не всем или на решения не влияют."],
+      ["C","Миссии и стратегического видения фактически нет."]
+    ], "Сформулируйте видение на 3-5 лет в 3-4 предложениях и проверьте, могут ли два ваших руководителя пересказать его своими словами."),
+    q("S02","Оцифрованные стратегические цели","Есть ли у компании конкретные стратегические цели в цифрах — с целевыми значениями и сроками достижения?",[
+      ["A","Стратегические цели зафиксированы в цифрах, с целевыми значениями и сроками, и утверждены собственником или советом директоров."],
+      ["B","Цели есть, но частично: часть без цифр, целевых значений или сроков — скорее направления, чем цели."],
+      ["C","Оцифрованных стратегических целей нет — есть общие намерения."]
+    ], "Запишите 3-5 стратегических целей компании в цифрах: текущее значение, целевое значение и срок."),
+    q("S03","Расчёт ресурсов под рост","Есть ли расчёт того, сколько денег, людей и ключевых компетенций потребуется компании, чтобы выйти на запланированный масштаб?",[
+      ["A","Есть расчёт по каждому виду ресурсов — деньги, люди, компетенции — с привязкой к срокам."],
+      ["B","Расчёт есть частично — например, по деньгам или численности, но не по всем видам ресурсов."],
+      ["C","Расчёта потребности в ресурсах для роста фактически нет."]
+    ], "Посчитайте, сколько денег, людей и компетенций потребует ваш план роста на ближайший год и к каким срокам они понадобятся."),
+  ]),
+  zone("finance","Финансы","Способность быстро увидеть экономическую реальность компании, а не бухгалтерская грамотность директора",16,[
+    q("F01","Прогноз кассовых разрывов","Насколько заранее компания обычно видит возможный кассовый разрыв — момент, когда денег не хватит на текущие платежи?",[
+      ["A","Компания видит кассовый разрыв за 2-3 месяца вперёд, по регулярно обновляемому платёжному календарю."],
+      ["B","Разрыв обычно замечают заранее, но не системно — за несколько дней или после ручного сбора данных."],
+      ["C","Кассовый разрыв обнаруживается, когда платёж уже приходится переносить."]
+    ], "Постройте платёжный календарь на 13 недель вперёд и определите минимальный остаток денег."),
+    q("F02","Понимание, где находятся деньги","Знаете ли вы, где сейчас находятся деньги компании — сколько зависло в долгах клиентов, в товаре на складе, в выданных авансах?",[
+      ["A","Да: минимум раз в неделю получаю от команды справку с суммами по каждой статье и всегда вижу картину."],
+      ["B","Такая информация доходит от случая к случаю, по запросу — регулярной картины нет."],
+      ["C","Такой информацией не владею — этот вопрос не в повестке."]
+    ], "Попросите команду подготовить справку: сколько денег сейчас в долгах клиентов, в товаре на складе и в выданных авансах — и поставьте её на еженедельный контроль."),
+    q("F03","Доходность вложенного капитала","Можете ли вы сказать, сколько процентов годовых реально зарабатывают деньги, вложенные в компанию её собственниками, и оценить, было бы выгоднее вложить их во что-то другое с похожим уровнем риска?",[
+      ["A","Знаем точную доходность на вложенный капитал в процентах годовых, её динамику и с чем справедливо сравнивать."],
+      ["B","Доходность в процентах годовых прикидываем, но не сравниваем с альтернативами и не следим за динамикой."],
+      ["C","Процентную доходность на вложенный капитал не считаем — смотрим только на абсолютную прибыль или дивиденды."]
+    ], "Посчитайте, сколько процентов годовых реально зарабатывают деньги, вложенные в компанию, и сравните со ставкой банковского депозита."),
+    q("F04","Маржинальность продуктов и направлений","Можете ли вы прямо сейчас уверенно назвать конкретные продукты или виды деятельности, которые маржинально положительны — покрывают постоянные затраты и приносят прибыль?",[
+      ["A","Да — управленческая отчётность выделяет прямую маржу по каждому продукту или направлению, без субъективного распределения общих затрат."],
+      ["C","Нет — управленческая отчётность делит затраты на прямые и косвенные с субъективным распределением по продуктам, поэтому точного ответа таким способом получить нельзя."]
+    ], "Проверьте, как в вашей управленческой отчётности считается прибыль по продуктам: есть ли там прямая маржа без распределения общих затрат. Если нет — посчитайте её так хотя бы за один месяц."),
+    q("F05","Финансовая устойчивость и риск банкротства","Можете ли вы прямо сейчас дать обоснованную оценку финансовой устойчивости и платёжеспособности компании — сейчас и на ближайшую перспективу?",[
+      ["A","Да — финансовый анализ проводится регулярно, необходимые коэффициенты рассчитываются, у меня есть и текущее, и перспективное понимание ситуации."],
+      ["C","Нет — регулярный финансовый анализ и прогноз не делаются, оценка ситуации происходит несистемно и интуитивно."]
+    ], "Посчитайте для своей компании коэффициент текущей ликвидности и коэффициент финансовой независимости — и обсудите с финансистом, что они означают именно для вашего бизнеса."),
+  ]),
+  zone("execution","Оперативное целеполагание и кроссфункциональное взаимодействие","Доходят ли цели компании до конкретных задач с ответственным и сроком, или теряются по дороге",12,[
+    q("E01","Цели и ключевые результаты по направлениям развития","Определены ли по ключевым направлениям развития компании цели и ключевые результаты, которые покажут, что цель достигнута, на этот или следующий год?",[
+      ["A","По каждому ключевому направлению есть цель и 2-4 ключевых результата с цифрами «было/будет», сроком и ответственным."],
+      ["B","Цели и ключевые результаты определены частично — не по всем направлениям, без цифр, срока или ответственного."],
+      ["C","Целей по ключевым направлениям и измеримых ключевых результатов фактически нет."]
+    ], "Возьмите одно ключевое направление и сформулируйте для него 2-3 ключевых результата: цифра «было», цифра «будет», срок, ответственный."),
+    q("E02","Кроссфункциональное участие в целях и их достижении","Участвуют ли руководители и эксперты разных подразделений в выработке целей и ключевых результатов вместе с руководством компании, а затем совместно работают над их достижением?",[
+      ["A","Да — цели и ключевые результаты вырабатываются с участием разных подразделений, и команда регулярно и совместно работает над их достижением."],
+      ["B","Частично: либо цели спускаются сверху без участия команды в их выработке, либо совместная работа над достижением идёт нерегулярно."],
+      ["C","Цели ставятся сверху, а достижение идёт внутри отдельных подразделений — горизонтального взаимодействия между отделами практически нет."]
+    ], "Пригласите на выработку одной цели или ключевого результата экспертов минимум из двух смежных подразделений — и оцените, изменилось ли качество и реализуемость результата."),
+    q("E03","План действий по ключевым результатам","По каждому ключевому результату сформирован ли конкретный план действий — кто, что делает и к какому сроку, — и регулярно ли факт сверяют с планом?",[
+      ["A","По каждому ключевому результату есть план действий с ответственным и сроком по каждой задаче, факт регулярно сверяют с планом."],
+      ["B","Планы действий есть частично — не по всем ключевым результатам, без ответственных, сроков или регулярной сверки."],
+      ["C","План действий по целям и ключевым результатам заранее не прописывается — формируется по ситуации, с колёс."]
+    ], "Возьмите один ключевой результат и распишите план действий по нему: кто, что делает и к какому сроку — и поставьте его на еженедельный контроль."),
+  ]),
+  zone("people","Люди","Видит ли компания дефицит кадров, риск ухода ключевых людей и что реально помогает их удержать",18,[
+    q("P01","Аналитика текучести кадров","Можете ли вы прямо сейчас точно на цифрах назвать обеспеченность кадрами и текучесть с начала года — по компании, по ключевым сотрудникам и по подразделениям — и дать прогноз на предстоящий год?",[
+      ["A","Да — такая аналитика ведётся регулярно, знаю точные цифры по компании, ключевым сотрудникам и подразделениям, есть прогноз на год."],
+      ["B","Аналитика ведётся фрагментарно — отдельные цифры есть, но единой картины по компании, ключевым сотрудникам и подразделениям нет."],
+      ["C","Нет — такая аналитика на регулярной основе не ведётся, картина о кадрах складывается интуитивно."]
+    ], "Посчитайте текучесть и обеспеченность кадрами с начала года — по компании и по 2-3 ключевым подразделениям — и сформируйте прогноз на предстоящий год."),
+    q("P02","Риск ухода ключевых сотрудников","Можете ли вы прямо сейчас назвать ключевых труднозаменимых сотрудников и риск ухода каждого из них?",[
+      ["A","Есть список ключевых сотрудников с оценкой риска ухода, причин и готовности замены по каждому."],
+      ["B","Ключевые сотрудники известны, но риск ухода и замена оценены не по всем."],
+      ["C","Системно ключевых сотрудников и риск их ухода не отслеживаем."]
+    ], "Составьте список из 5-10 труднозаменимых сотрудников и честно оцените риск ухода каждого."),
+    q("P03","Беседы при увольнении и превентивные беседы с ключевыми сотрудниками","Проводятся ли структурированные беседы с увольняющимися сотрудниками и превентивные беседы с ключевыми действующими сотрудниками, а выявленные проблемы и предложения превращаются в план действий по удержанию со сроками и ответственными?",[
+      ["A","Да — оба вида бесед идут регулярно, по сценарию, а выявленное превращается в план действий со сроками и ответственными."],
+      ["B","Беседы бывают, но нерегулярно или без превращения выявленного в план действий со сроками и ответственными."],
+      ["C","Беседы случаются время от времени — структурированного процесса обратной связи и решения проблем нет."]
+    ], "Проведите 3 таких беседы — одну с увольняющимся сотрудником и две превентивные с ключевыми действующими — и оформите по итогам план действий со сроками и ответственными."),
+    q("P04","Индекс лояльности сотрудников","Измеряете ли вы индекс лояльности сотрудников — по компании, по подразделениям и по отдельным руководителям, — и превращаете ли результаты в карту факторов лояльности и нелояльности и план действий по её повышению?",[
+      ["A","Да — измеряем анонимно по компании, подразделениям и отдельным руководителям, видим факторы лояльности и нелояльности и реализуем план действий по итогам."],
+      ["B","Индекс измеряем частично — например, только по компании в целом, без разбивки по руководителям или без карты факторов и плана действий."],
+      ["C","Такое измерение лояльности сотрудников не проводим."]
+    ], "Проведите анонимный опрос лояльности хотя бы по одному подразделению — с вопросами и про компанию, и про непосредственного руководителя — и выделите 2-3 главных фактора, которые на неё влияют."),
+  ]),
+  zone("customer","Клиенты","Измеряет ли руководство лояльность клиентов, понимает ли, что на неё влияет, и видит ли ранний сигнал о падении спроса",15,[
+    q("C01","Система управления клиентской лояльностью","Измеряете ли вы индекс лояльности или удовлетворённости клиентов (например, NPS), выявляете ли факторы лояльности и нелояльности и доводите ли их до конкретных изменений — как в решении проблем отдельных клиентов, так и в бизнес-процессах компании?",[
+      ["A","Да — считаем индекс, регулярно выявляем факторы лояльности и нелояльности, решаем проблемы конкретных клиентов (малый контур) и системно меняем бизнес-процессы по повторяющимся проблемам (большой контур)."],
+      ["B","Индекс считаем, но система работает частично — например, решаем проблемы отдельных клиентов, но не систематизируем их для изменений в бизнес-процессах, или наоборот."],
+      ["C","Индекс лояльности или удовлетворённости клиентов не считаем."]
+    ], "Проведите опрос лояльности (например, NPS) хотя бы по одному сегменту клиентов и выделите 1-2 наиболее частые проблемы, которые называют клиенты."),
+    q("C02","Карта пути клиента (CJM)","Отслеживаете ли вы путь клиента через все точки контакта с компанией — с помощью карты клиентского пути (Customer Journey Map), измеряете ли его ожидания, эмоции и удовлетворённость в каждой точке контакта и работаете ли системно над улучшением проблемных мест?",[
+      ["A","Да — карта пути клиента построена и актуализируется, по каждой точке контакта известны ожидания и удовлетворённость клиента, проблемные места системно улучшаются."],
+      ["B","Отдельные точки контакта или этапы пути анализируем, но целостной карты пути клиента нет, либо она не используется для системных улучшений."],
+      ["C","Путь клиента через точки контакта не отслеживаем."]
+    ], "Постройте упрощённую карту пути клиента по одному ключевому сценарию — например, от первого обращения до покупки — и отметьте на ней 2-3 самые проблемные точки контакта."),
+    q("C03","Речевая аналитика и ИИ-анализ обратной связи","Работает ли у вас в компании автоматизированная система речевой аналитики — транскрибируются ли переговоры с клиентами и анализируются ли при помощи искусственного интеллекта, и превращаются ли результаты анализа в план корректирующих мер?",[
+      ["A","Да — переговоры с клиентами транскрибируются и анализируются при помощи искусственного интеллекта, по результатам анализа принимается план корректирующих мер."],
+      ["B","Переговоры с клиентами анализируются частично — например, выборочно, вручную или без регулярного плана корректирующих мер."],
+      ["C","Такая работа не проводится."]
+    ], "Прослушайте или прочитайте 10-15 последних разговоров или переписок с клиентами (при желании — с помощью любого доступного ИИ-инструмента) и выделите 2-3 повторяющиеся проблемы."),
+    q("C04","Концентрация выручки на крупных клиентах","Знаете ли вы, какая доля выручки приходится на постоянных клиентов, и что произойдёт с бизнесом, если один-два крупнейших клиента уйдут?",[
+      ["A","Знаем долю выручки от крупнейших клиентов; есть план снижения риска, если зависимость высока."],
+      ["B","Есть общее представление, кто крупные клиенты, но точных цифр или плана нет."],
+      ["C","Такую зависимость не отслеживаем."]
+    ], "Посчитайте, какая доля выручки приходится на трёх крупнейших клиентов, и что случится, если один из них уйдёт."),
+  ]),
+  zone("decisions","Решения","Принимаются ли важные решения коллегиально, по понятному алгоритму, и контролируется ли их реализация",14,[
+    q("D01","Коллегиальность принятия решений","Важные решения в компании принимаются коллегиально, по формальной процедуре с обсуждением и голосованием ключевых руководителей, или это всегда единоличное, директивное решение первого лица?",[
+      ["A","Важные решения проходят формальную процедуру — обсуждение вариантов и голосование или согласование ключевых руководителей, даже если финальное слово за первым лицом."],
+      ["B","Формальной процедуры нет, но мнение ключевых руководителей перед решением обычно учитывается."],
+      ["C","Важные решения принимаются единолично, директивно, без обсуждения с командой."]
+    ], "На следующем важном решении проведите очное обсуждение с 2-3 ключевыми руководителями до того, как решение будет принято, и зафиксируйте их позиции."),
+    q("D02","Алгоритм выработки решений и роль ИИ","Существует ли в компании обязательный алгоритм подготовки важных решений — сбор информации, в том числе анализ больших массивов данных с помощью ИИ, подготовка нескольких альтернатив, их оценка и реализация принятого решения со сроками, ответственными и контрольными точками, — без прохождения которого решение не принимается?",[
+      ["A","Да — важные решения проходят обязательный алгоритм: сбор данных (в том числе с помощью ИИ), подготовка и оценка нескольких альтернатив, а после принятия — реализация со сроками, ответственными и контрольными точками."],
+      ["B","Отдельные элементы алгоритма используются — например, сбор данных или сравнение альтернатив, — но целостной обязательной процедуры нет."],
+      ["C","Такого алгоритма нет — решения принимаются без формализованной подготовки."]
+    ], "На следующем крупном решении пройдите весь цикл письменно: соберите ключевые данные, сформулируйте минимум два альтернативных варианта, оцените их и зафиксируйте сроки, ответственного и контрольную точку по реализации."),
+    q("D03","Чек-листы контроля решений","Существует ли в компании система чек-листов, с помощью которых контролируется принятие и реализация важных решений?",[
+      ["A","Да — по важным решениям есть чек-листы, которые используются и на этапе принятия решения, и при контроле его реализации."],
+      ["B","Чек-листы есть, но используются нерегулярно или только на одном из этапов — либо при принятии решения, либо при контроле реализации."],
+      ["C","Системы чек-листов для контроля решений нет."]
+    ], "Составьте чек-лист из 5-7 пунктов для контроля принятия и реализации одного текущего важного решения и пройдите по нему."),
+  ]),
+  zone("ai","ИИ","Используют ли руководители ИИ в ежедневной работе, автоматизированы ли процессы и есть ли правила применения",12,[
+    q("A01","Персональные AI-ассистенты у менеджмента","Пользуются ли ключевые руководители компании личными AI-ассистентами на регулярной основе в своей работе?",[
+      ["A","Да, большинство ключевых руководителей регулярно используют персональных AI-ассистентов в рабочих задачах."],
+      ["B","Отдельные руководители иногда используют, но это не общая практика."],
+      ["C","Персональные AI-ассистенты в работе менеджмента практически не используются."]
+    ], "Предложите каждому из 3-5 ключевых руководителей завести персонального AI-ассистента и использовать его хотя бы для одной рабочей задачи в течение недели."),
+    q("A02","Глубокое исследование (Deep Research) при подготовке решений","При подготовке проектов решений и аналитических материалов менеджмент использует функцию глубокого исследования (Deep Research) в ИИ-инструментах?",[
+      ["A","Да, регулярно используем Deep Research при подготовке значимых аналитических материалов и проектов решений."],
+      ["B","Пробовали или используем эпизодически, не как постоянную практику."],
+      ["C","Функцию Deep Research не используем."]
+    ], "Подготовьте один аналитический материал или проект решения с использованием функции Deep Research в любом доступном ИИ-инструменте."),
+    q("A03","Агентные системы ИИ в бизнес-процессах","Использует ли менеджмент агентные системы ИИ — автономных ИИ-агентов, которые сами выполняют рабочую задачу из нескольких шагов (например, собирают отчёт из разных источников или обрабатывают поток заявок), а не только отвечают в чате, — и есть ли на предприятии хотя бы один повторяющийся бизнес-процесс, автоматизированный с помощью таких систем?",[
+      ["A","Да — есть хотя бы один регулярный бизнес-процесс, автоматизированный с помощью агентных ИИ-систем, с понятным результатом и ответственным."],
+      ["B","Агентные системы пробуем или используем эпизодически, но ни один процесс полностью не автоматизирован."],
+      ["C","Агентные системы ИИ не используем."]
+    ], "Выберите один повторяющийся процесс и попробуйте автоматизировать его хотя бы частично с помощью агентной ИИ-системы."),
+    q("A04","Структурированные базы знаний для анализа с ИИ","Сформированы ли на предприятии структурированные базы знаний — документы, данные, регламенты, — на основе которых с помощью ИИ ведётся анализ и принимаются решения?",[
+      ["A","Да — есть структурированная база знаний, которую ИИ использует для анализа и подготовки решений."],
+      ["B","База знаний есть, но она разрозненная, или ИИ с ней системно не работает."],
+      ["C","Структурированной базы знаний для работы ИИ нет."]
+    ], "Соберите ключевые документы по одному направлению в единую папку или базу и попробуйте получить с их помощью от ИИ ответ на конкретный рабочий вопрос."),
+    q("A05","Регламент применения ИИ","Существует ли на предприятии регламент, регулирующий вопросы применения ИИ — что можно и нельзя загружать, кто отвечает за использование, какие инструменты разрешены?",[
+      ["A","Да, регламент применения ИИ существует и соблюдается."],
+      ["B","Формального регламента нет, но есть неписаные правила или устные договорённости."],
+      ["C","Использование ИИ никак не регулируется."]
+    ], "Составьте краткий регламент на одну страницу с базовыми правилами использования ИИ в компании — что можно, что нельзя, кто отвечает."),
+  ]),
+];
+
+const ALL_QUESTIONS = ZONES.flatMap(z => z.questions.map(qq => ({...qq, zoneKey:z.key, zoneTitle:z.title, zoneWeight:z.weight})));
+const TOTAL_QUESTIONS = ALL_QUESTIONS.length;
+const ZONE_OF_CODE = Object.fromEntries(ALL_QUESTIONS.map(qq => [qq.code, qq.zoneKey]));
+// порог маршрута Diagnostic Sprint — доля слабых ответов, а не фиксированное число
+const DIAGNOSTIC_WEAK_THRESHOLD = Math.ceil(TOTAL_QUESTIONS * 0.26);
+
+/* =========================================================
+   КОД РЕЗУЛЬТАТА — все ответы, упакованные в короткую строку.
+   Ничего не хранится на сервере: код сам несёт профиль и 27 ответов.
+   ========================================================= */
+const CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";   // без 0/O, 1/I — чтобы не путать
+const CODE_VERSION = "A";                                     // MOS-EST-03, редакция 4.1
+const CODE_DATA_LEN = 11;
+const CODE_FIELDS = [
+  ...PROFILE_QUESTIONS.map(pq=>({kind:"p", code:pq.code, values:pq.options.map(o=>o[0])})),
+  ...ALL_QUESTIONS.map(qq=>({kind:"q", code:qq.code, values:qq.options.map(o=>o[0])}))
+];
+function codeCheck(s){
+  let h = 7;
+  for(const ch of s) h = (h*37 + CODE_ALPHABET.indexOf(ch) + 1) % 1021;
+  return CODE_ALPHABET[Math.floor(h/32)] + CODE_ALPHABET[h%32];
+}
+function encodeResult(){
+  let n = 0n;
+  for(const f of CODE_FIELDS){
+    const v = f.kind==="p" ? state.profile[f.code] : state.answers[f.code];
+    const idx = Math.max(0, f.values.indexOf(v));
+    n = n*BigInt(f.values.length) + BigInt(idx);
+  }
+  let s = "";
+  for(let i=0;i<CODE_DATA_LEN;i++){ s = CODE_ALPHABET[Number(n%32n)] + s; n = n/32n; }
+  const body = CODE_VERSION + s;
+  const full = body + codeCheck(body);
+  return "MOS-" + full.slice(0,5) + "-" + full.slice(5,10) + "-" + full.slice(10);
+}
+function decodeResult(raw){
+  let s = String(raw||"").toUpperCase().replace(/[^0-9A-Z]/g,"");
+  if(s.startsWith("MOS")) s = s.slice(3);
+  if(s.length !== 1 + CODE_DATA_LEN + 2) return {error:"Код должен состоять из 14 знаков после MOS. Проверьте, что он скопирован целиком."};
+  if([...s].some(ch=>CODE_ALPHABET.indexOf(ch)<0)) return {error:"В коде есть недопустимые знаки. Цифр 0 и 1 и букв O и I в коде не бывает."};
+  const body = s.slice(0,-2);
+  if(codeCheck(body) !== s.slice(-2)) return {error:"Код не прошёл проверку — вероятно, в нём опечатка."};
+  if(body[0] !== CODE_VERSION) return {error:"Код от другой версии теста."};
+  let n = 0n;
+  for(const ch of body.slice(1)) n = n*32n + BigInt(CODE_ALPHABET.indexOf(ch));
+  const profile = {}, answers = {};
+  for(let i=CODE_FIELDS.length-1;i>=0;i--){
+    const f = CODE_FIELDS[i], r = BigInt(f.values.length);
+    const idx = Number(n % r); n = n / r;
+    (f.kind==="p" ? profile : answers)[f.code] = f.values[idx];
+  }
+  if(n !== 0n) return {error:"Код не соответствует ни одному набору ответов."};
+  return {profile, answers};
+}
+
+/* сохранение PDF: в окне Claude — через загрузки, на обычном сайте — скачиванием файла */
+async function saveBlob(blob, filename){
+  let downloads = null;
+  try{ downloads = (window.claude && claude.use) ? await claude.use("downloads") : null; }catch(e){ downloads = null; }
+  if(downloads){
+    const res = await downloads.save({ filename, data: blob });
+    return res && res.status === "saved";
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 60000);
+  return true;
+}
+async function pdfButton(btn, filename, okMsg){
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Собираю PDF…";
+  try{
+    const blob = await makePdfBlob();
+    const ok = await saveBlob(blob, filename);
+    if(ok) toast(okMsg);
+  }catch(err){
+    const code = err && err.code;
+    if(code === "declined" || code === "rate_limited"){ /* отказ пользователя — молча */ }
+    else toast("Не удалось собрать PDF — проверьте интернет и попробуйте ещё раз");
+  }finally{
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
+const AUTHORS_HTML = (cls, label)=>`<div class="authors ${cls}">
+    <p class="al">${label}</p>
+    <div class="ag">
+      <div class="ap"><p class="an">Александр Мартынов</p><p class="ar">Автор и основной ведущий</p>
+        <p class="ad">Действующий CEO и член совета директоров. 15+ лет в управлении. Компания: 1400+ сотрудников, 200 000+ клиентов, 5 филиалов. Пять раз отчитывался перед советом директоров по итогам года.</p></div>
+      <div class="ap"><p class="an">Ирина Жильцова</p><p class="ar">Соавтор программы</p>
+        <p class="ad">Эксперт в области HR, 25+ лет в отрасли: от рекрутера до директора по персоналу. Командный коуч ICF. Входит в международный рейтинг ТОП-50 HR-профессионалов.</p></div>
+    </div>
+  </div>`;
+
+function plural(n, forms){ // forms: [1, 2-4, 5+]
+  const n10 = n % 10, n100 = n % 100;
+  if(n10 === 1 && n100 !== 11) return forms[0];
+  if(n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return forms[1];
+  return forms[2];
+}
+
+// Критические переопределения — приоритет сверху вниз
+const CRITICAL_RULES = [
+  { code:"F01", risk:"Компания не видит кассовый разрыв заранее.", detail:"Дефицит денег обычно обнаруживается в момент, когда платёж уже нужно переносить, а не за 8-13 недель, когда есть время подготовиться. Это создаёт риск кассовых авралов, потери доверия поставщиков и вынужденных займов на невыгодных условиях." },
+  { code:"C04", risk:"Выручка критически зависит от нескольких клиентов.", detail:"Компания не отслеживает, какая доля выручки приходится на крупнейших клиентов. Уход одного-двух из них может ударить по бизнесу непропорционально сильно и неожиданно." },
+  { code:"P02", risk:"Риск потери ключевого сотрудника не отслеживается.", detail:"Компания системно не отслеживает, кто из труднозаменимых сотрудников может уйти и что произойдёт с бизнесом и с знаниями, которые уйдут вместе с ним." },
+  { code:"C01", risk:"Система управления клиентской лояльностью не работает как единое целое.", detail:"Компания либо не измеряет лояльность клиентов, либо измеряет, но не доводит результаты до решения проблем — ни точечного (малый контур), ни системного, через изменение бизнес-процессов (большой контур). Клиентская лояльность — опережающий, а не запаздывающий сигнал: без замкнутого контура падение спроса становится заметно только тогда, когда оно уже отразилось на выручке." },
+  { code:"S02", risk:"У компании нет оцифрованных стратегических целей.", detail:"Есть направления и намерения, но нет целей в цифрах с целевыми значениями и сроками. В этом случае невозможно проверить, движется ли компания к цели или просто расходует ресурсы: любой результат года можно объяснить задним числом, и ни одно решение нельзя проверить на соответствие стратегии." },
+  { code:"E01", risk:"Цели компании не доведены до измеримых ключевых результатов.", detail:"По ключевым направлениям развития нет целей и ключевых результатов с цифрами, сроком и ответственным. Из-за этого работа подразделений не складывается в общий результат, а выполнение задач невозможно отличить от достижения цели." },
+  { code:"F05", risk:"Угроза платёжеспособности не видна заранее.", detail:"Компания не может обоснованно оценить риск финансовых проблем на горизонте 3-12 месяцев — а значит, узнаёт о серьёзной угрозе, когда возможностей для манёвра почти не остаётся." },
+  { code:"D02", risk:"Важные решения принимаются без обязательной процедуры подготовки.", detail:"Нет алгоритма, через который проходит каждое значимое решение: сбор данных, альтернативы, их оценка и реализация со сроками и контрольными точками. Качество решений в этом случае зависит от состояния и опыта конкретного человека в конкретный день, а цена ошибки растёт вместе с масштабом компании." },
+  { code:"P03", risk:"Нет надёжного сигнала о причинах ухода людей.", detail:"Без структурированных интервью с увольняющимися и с ключевыми действующими сотрудниками компания не получает достоверных данных о рисках удержания — только догадки постфактум." },
+  { code:"P04", risk:"Динамика лояльности сотрудников не видна руководству.", detail:"Без измеримого индекса лояльности, карты факторов и плана действий проблема с людьми обнаруживается только по факту увольнений — то есть слишком поздно, чтобы на неё повлиять." },
+];
+
+/* =========================================================
+   ЗАКЛЮЧЕНИЕ — уровни зрелости, следствия ответов, вердикты по зонам
+   ========================================================= */
+const MATURITY_LEVELS = [
+  { min:80, num:5, name:"Управляемая система",
+    portrait:"Ключевые показатели бизнеса руководитель называет без подготовки, а решения и цели живут в процедурах, а не в памяти первого лица. Компания способна работать и развиваться, когда собственник занят другим. Разрывы, если они есть, носят точечный характер и не угрожают системе в целом." },
+  { min:65, num:4, name:"Работающая система с системными разрывами",
+    portrait:"Большая часть управленческих контуров собрана и работает, но один-два дают устойчивый сбой. Как правило, разрыв находится там, где измерение уже налажено, а действие по его результатам не закреплено за конкретным человеком и сроком. Такая система устойчива в спокойной обстановке и даёт сбой в момент нагрузки." },
+  { min:50, num:3, name:"Смешанное управление: процессы плюс ручной контроль",
+    portrait:"Часть работы опирается на процессы, часть — на ручной контроль и память руководителей. Данные для управления обычно существуют, но собираются под запрос и в разном формате, поэтому скорость реакции зависит от того, кто и когда задал вопрос. Система работает, но её пропускная способность ограничена вниманием первого лица." },
+  { min:35, num:2, name:"Ручное управление на личном контроле первого лица",
+    portrait:"Система держится на личном контроле руководителя: информация поступает по запросу, цели и решения существуют, но не зафиксированы так, чтобы их можно было проверить без участия первого лица. Компания управляема ровно настолько, насколько хватает внимания одного человека, и упирается в этот предел при любом росте." },
+  { min:0, num:1, name:"Система управления пока не сформирована",
+    portrait:"Управление держится на памяти и присутствии руководителя. Большинство ключевых показателей нельзя назвать без предварительной подготовки, а значит, решения принимаются на основе представлений, а не фактов. Это нормальное состояние для раннего этапа, но опасное при любом росте масштаба." },
+];
+function levelOf(pct){ return MATURITY_LEVELS.find(l => pct >= l.min) || MATURITY_LEVELS[MATURITY_LEVELS.length-1]; }
+
+// развёрнутые выводы по ответам и зонам — только в версии для эксперта
+const QUESTION_IMPACT = {}, ZONE_VERDICT = {}, ROUTES = {};
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const state = {
+  screen: "intro",
+  qIndex: 0,
+  profile: {},
+  answers: {},
+  confidenceQuestions: null,
+  confidenceNotes: {},
+};
+
+function letterOf(code){ return state.answers[code]; }
+function zoneAvg(z){
+  const vals = z.questions.map(qq => LETTER_VALUE[letterOf(qq.code)] ?? 0);
+  return vals.reduce((a,b)=>a+b,0) / z.questions.length;
+}
+function aRatio(){
+  const letters = Object.values(state.answers);
+  if(!letters.length) return 0;
+  return letters.filter(l=>l==="A").length / letters.length;
+}
+function countWeak(){
+  return Object.values(state.answers).filter(l=>l==="C").length;
+}
+function seedRandom(seed){
+  let s = seed % 2147483647; if (s<=0) s += 2147483646;
+  return function(){ s = s*16807 % 2147483647; return (s-1)/2147483646; };
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+const app = document.getElementById("app");
+const rulerEl = document.getElementById("ruler");
+const stepnoteEl = document.getElementById("stepnote");
+
+function totalAnsweredCount(){ return Object.keys(state.answers).length; }
+
+function updateHeader(){
+  rulerEl.innerHTML = "";
+  const showRuler = ["zone","confidence","contact","result"].includes(state.screen.split(":")[0]);
+  if(!showRuler){ rulerEl.style.visibility="hidden"; stepnoteEl.textContent=""; return; }
+  rulerEl.style.visibility="visible";
+  ZONES.forEach((z,i)=>{
+    const seg = document.createElement("i");
+    const b = document.createElement("b");
+    let frac = 0;
+    if(state.screen.startsWith("zone")){
+      const answeredHere = z.questions.filter(qq=>state.answers[qq.code]).length;
+      frac = answeredHere / z.questions.length;
+    } else if(["confidence","contact","result"].includes(state.screen)) frac = 1;
+    b.style.setProperty("--f", frac);
+    seg.appendChild(b);
+    rulerEl.appendChild(seg);
+  });
+  if(state.screen.startsWith("zone")){
+    const cur = ALL_QUESTIONS[state.qIndex];
+    const zoneNum = ZONES.findIndex(z=>z.key===cur.zoneKey) + 1;
+    stepnoteEl.textContent = "ЗОНА " + zoneNum + " / " + ZONES.length + " · ВОПРОС " + (state.qIndex+1) + "/" + TOTAL_QUESTIONS;
+  } else if(state.screen==="confidence"){ stepnoteEl.textContent = "ПРОВЕРКА ОТВЕТОВ"; }
+  else if(state.screen==="result"){ stepnoteEl.textContent = "РЕЗУЛЬТАТ"; }
+}
+
+function render(){
+  updateHeader();
+  if(state.screen==="intro") return renderIntro();
+  if(state.screen==="profile") return renderProfile();
+  if(state.screen==="zone") return renderZone();
+  if(state.screen==="confidence") return renderConfidence();
+  if(state.screen==="result") return renderResult();
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+/* ---------- INTRO ---------- */
+function renderIntro(){
+  app.innerHTML = `
+  <div class="screen card">
+    <h1>Executive Systems Stress&nbsp;Test</h1>
+    <p class="muted">Адаптивная диагностика управляемости бизнеса — ${TOTAL_QUESTIONS} ${plural(TOTAL_QUESTIONS,["вопрос","вопроса","вопросов"])} о том, как компания реально работает, без управленческой терминологии.</p>
+    <div class="principle"><b>Принцип теста.</b> Мы проверяем не знание менеджмента, а способность прямо сейчас назвать показатель, показать источник, объяснить причину и принять решение. Честный ответ «не знаю» — тоже полезный результат.</div>
+    ${AUTHORS_HTML("", "Тест разработан авторами программы Management OS + AI")}
+    <div class="metarow">
+      <div><b>18–25 мин</b>время</div>
+      <div><b>${TOTAL_QUESTIONS} ${plural(TOTAL_QUESTIONS,["вопрос","вопроса","вопросов"])}</b>+ адаптивные уточнения</div>
+      <div><b>7 зон</b>управляемости</div>
+    </div>
+    <div class="btnrow">
+      <button class="btn-primary" id="start">Начать тест →</button>
+    </div>
+    <p class="muted" style="margin-top:18px; font-size:13px;">Тест не запрашивает финансовую отчётность и банковские выписки. В конце — краткое заключение в PDF и приглашение на разбор с экспертом.</p>
+  </div>`;
+  document.getElementById("start").onclick = ()=>{ state.screen="profile"; render(); };
+}
+
+/* ---------- PROFILE ---------- */
+function renderProfile(){
+  app.innerHTML = `
+  <div class="screen card">
+    <div class="eyebrow"><span class="dot"></span>ПРОФИЛЬ</div>
+    <h2>Пара слов о компании</h2>
+    <p class="muted">Эти ответы не влияют на балл — только на язык результата. Ответы остаются на вашем устройстве и никуда не отправляются.</p>
+    <div id="profile-fields"></div>
+    <div class="btnrow">
+      <button class="btn-ghost" id="back">← Назад</button>
+      <button class="btn-primary" id="next">Далее →</button>
+    </div>
+  </div>`;
+  const wrap = document.getElementById("profile-fields");
+  PROFILE_QUESTIONS.forEach(pq=>{
+    const div = document.createElement("div");
+    div.className = "field";
+    div.innerHTML = `<label>${pq.label}</label><div class="selectwrap"><select data-pr="${pq.code}">
+      <option value="">— выберите —</option>
+      ${pq.options.map(([v,t])=>`<option value="${v}" ${state.profile[pq.code]===v?"selected":""}>${t}</option>`).join("")}
+    </select></div>`;
+    wrap.appendChild(div);
+  });
+  wrap.querySelectorAll("select").forEach(sel=>{
+    sel.onchange = ()=>{ state.profile[sel.dataset.pr] = sel.value; };
+  });
+  document.getElementById("back").onclick = ()=>{ state.screen="intro"; render(); };
+  document.getElementById("next").onclick = ()=>{
+    const missing = PROFILE_QUESTIONS.filter(pq=>!state.profile[pq.code]);
+    if(missing.length){ toast("Заполните все поля профиля"); return; }
+    state.screen="zone"; state.qIndex=0; render();
+  };
+}
+
+/* ---------- ВОПРОС (по одному на экран) ---------- */
+function renderZone(){
+  const qq = ALL_QUESTIONS[state.qIndex];
+  const zIdx = ZONES.findIndex(z=>z.key===qq.zoneKey);
+  const z = ZONES[zIdx];
+  const firstOfZone = z.questions[0].code === qq.code;   // на первом вопросе зоны показываем, о чём блок
+  const isLast = state.qIndex === TOTAL_QUESTIONS - 1;
+
+  app.innerHTML = `
+  <div class="screen card">
+    <div class="zonehead"><span class="zonenum mono">${zIdx+1}/${ZONES.length}</span><div class="eyebrow" style="margin:0;"><span class="dot"></span>${z.title.toUpperCase()}</div></div>
+    ${firstOfZone ? `<p class="zonelead">${z.subtitle}</p>` : ""}
+    <h2 class="qtext">${qq.text}</h2>
+    <div class="opts" id="opts"></div>
+    <div class="btnrow">
+      <button class="btn-ghost" id="back">← Назад</button>
+      <button class="btn-primary" id="next">${isLast?"Завершить вопросы →":"Далее →"}</button>
+    </div>
+  </div>`;
+
+  const wrap = document.getElementById("opts");
+  qq.options.forEach(([letter,text])=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "opt" + (state.answers[qq.code]===letter ? " sel" : "");
+    b.dataset.letter = letter;
+    b.innerHTML = `<span class="opt-mark mono">${letter}</span><span class="opt-text">${text}</span>`;
+    b.onclick = ()=>{
+      state.answers[qq.code] = letter;
+      wrap.querySelectorAll(".opt").forEach(el=>el.classList.toggle("sel", el.dataset.letter===letter));
+      wrap.classList.remove("unanswered");
+      updateHeader();
+    };
+    wrap.appendChild(b);
+  });
+
+  document.getElementById("back").onclick = ()=>{
+    if(state.qIndex===0){ state.screen="profile"; } else { state.qIndex--; }
+    window.scrollTo(0,0); render();
+  };
+  document.getElementById("next").onclick = ()=>{
+    if(!state.answers[qq.code]){
+      wrap.classList.add("unanswered");
+      toast("Выберите один из вариантов");
+      return;
+    }
+    if(!isLast){ state.qIndex++; window.scrollTo(0,0); render(); return; }
+    // все вопросы пройдены — решаем, какой экран следующий
+    if(aRatio() > 0.75){
+      const rng = seedRandom(Date.now()%100000 + 7);
+      const aCodes = Object.entries(state.answers).filter(([,l])=>l==="A").map(([c])=>c);
+      const shuffled = aCodes.map(c=>[rng(),c]).sort((a,b)=>a[0]-b[0]).map(([,c])=>c);
+      state.confidenceQuestions = shuffled.slice(0,3);
+      state.screen = "confidence";
+    } else {
+      state.screen = "result";
+    }
+    render();
+  };
+}
+
+/* ---------- CONFIDENCE CHECK ---------- */
+function renderConfidence(){
+  const codes = state.confidenceQuestions || [];
+  const qs = codes.map(c => ALL_QUESTIONS.find(qq=>qq.code===c)).filter(Boolean);
+  app.innerHTML = `
+  <div class="screen card">
+    <div class="eyebrow"><span class="dot"></span>ЗАЩИТА ОТ САМООЦЕНКИ</div>
+    <h2>Проверим три ответа</h2>
+    <p class="muted">В большинстве вопросов вы выбрали вариант «есть отлаженная практика». Прежде чем показать результат — коротко, в одной-двух фразах, подтвердите три случайных ответа конкретным примером, отчётом или событием последних 90 дней. Это не влияет на балл, но делает результат честнее.</p>
+    <div id="conf-fields"></div>
+    <div class="btnrow">
+      <button class="btn-primary" id="next">Показать результат →</button>
+    </div>
+  </div>`;
+  const wrap = document.getElementById("conf-fields");
+  qs.forEach(qq=>{
+    const div = document.createElement("div");
+    div.className = "qa-block";
+    div.innerHTML = `<div class="field"><label><span class="qcode mono">${qq.code}</span>${qq.text}</label>
+      <textarea placeholder="Например: конкретный отчёт, дата, кто отвечает…">${state.confidenceNotes[qq.code]||""}</textarea></div>`;
+    wrap.appendChild(div);
+  });
+  wrap.querySelectorAll("textarea").forEach((ta,i)=>{
+    ta.oninput = ()=>{ state.confidenceNotes[qs[i].code] = ta.value; };
+  });
+  document.getElementById("next").onclick = ()=>{ state.screen="result"; window.scrollTo(0,0); render(); };
+}
+
+/* ---------- RESULT COMPUTATION ---------- */
+function computeResult(){
+  const zonesCalc = ZONES.map(z=>{
+    const avg = zoneAvg(z); // 0..2
+    const pct = Math.round(avg/2*100);
+    const eCount = z.questions.filter(qq=>letterOf(qq.code)==="C").length;
+    return {...z, avg, pct, eCount};
+  });
+  const overallPct = Math.round(zonesCalc.reduce((sum,z)=> sum + (z.pct * z.weight/100), 0));
+
+  const weakZones = zonesCalc.filter(z=>z.pct < 55).sort((a,b)=>a.pct-b.pct);
+  const strongZones = zonesCalc.filter(z=>z.pct >= 75).sort((a,b)=>b.pct-a.pct);
+
+  const triggered = CRITICAL_RULES.filter(r => letterOf(r.code) === "C");
+
+  // headline band
+  let headline;
+  if(overallPct>=80) headline = "Управляемая система с редкими точечными разрывами";
+  else if(overallPct>=65) headline = "Работающая система с несколькими системными разрывами";
+  else if(overallPct>=50) headline = "Ручное управление с частичной опорой на процессы";
+  else if(overallPct>=35) headline = "Компания держится в основном на личном контроле первого лица";
+  else headline = "Система управления пока не сформирована — большинство решений держится на памяти и личном участии";
+
+  // strong practices — только реально сильные ответы (A); при равенстве вперёд идёт более весомая зона
+  const answeredQs = ALL_QUESTIONS.map(qq=>({...qq, letter: letterOf(qq.code), val: LETTER_VALUE[letterOf(qq.code)] ?? 0}));
+  const strongSorted = answeredQs
+    .filter(a => a.val === 2)
+    .sort((a,b)=> b.zoneWeight - a.zoneWeight);
+  const usedZones = new Set();
+  const strongPractices = [];
+  for(const sp of strongSorted){                 // не более одной практики на зону, пока хватает разных зон
+    if(usedZones.has(sp.zoneKey)) continue;
+    usedZones.add(sp.zoneKey);
+    strongPractices.push(sp);
+    if(strongPractices.length === 2) break;
+  }
+  if(strongPractices.length < 2 && strongSorted.length > strongPractices.length){
+    for(const sp of strongSorted){
+      if(strongPractices.includes(sp)) continue;
+      strongPractices.push(sp);
+      if(strongPractices.length === 2) break;
+    }
+  }
+
+  // weak spots for 7-day checks — сначала критические флаги, затем реально слабые ответы (B и C)
+  const criticalCodes = triggered.map(t=>t.code);
+  const restSorted = answeredQs
+    .filter(a => !criticalCodes.includes(a.code) && a.val < 2)
+    .sort((a,b)=> a.val - b.val || b.zoneWeight - a.zoneWeight);
+  const checkCodes = [...criticalCodes, ...restSorted.map(a=>a.code)].slice(0,3);
+  const checks = checkCodes.map(c => ALL_QUESTIONS.find(qq=>qq.code===c)).filter(Boolean);
+
+  // routing
+  const zonesWithFlags = new Set(triggered.map(t => ZONE_OF_CODE[t.code]));
+  let routeKey;
+  if(state.profile.PR5 === "holding") routeKey = "holding";
+  else if(countWeak() >= DIAGNOSTIC_WEAK_THRESHOLD) routeKey = "diagnostic";
+  else if(weakZones.length >= 4){
+    const highHeadcount = ["51-200","201-500","500+"].includes(state.profile.PR2);
+    routeKey = (highHeadcount && triggered.length >= 2) ? "private" : "group";
+  }
+  // критические флаги минимум в трёх зонах — это уже не точечная правка
+  else if(zonesWithFlags.size >= 3) routeKey = "group";
+  else if(triggered.length >= 1 || weakZones.length >= 1) routeKey = "focused";
+  else {
+    const soloSignal = state.profile.PR1==="owner" && state.profile.PR2==="lt20";
+    routeKey = soloSignal ? "nurture" : "healthy";
+  }
+
+  return { zonesCalc, overallPct, weakZones, strongZones, triggered, headline, level: levelOf(overallPct), strongPractices, checks, routeKey };
+}
+
+/* ---------- ЗАКЛЮЧЕНИЕ ---------- */
+const PROFILE_LABEL = {};
+PROFILE_QUESTIONS.forEach(pq => pq.options.forEach(([v,t]) => { PROFILE_LABEL[pq.code+":"+v] = t; }));
+function profileText(code){ return PROFILE_LABEL[code+":"+state.profile[code]] || "—"; }
+
+function answerTextOf(qq){
+  const l = letterOf(qq.code);
+  const opt = qq.options.find(o=>o[0]===l);
+  return opt ? opt[1] : "—";
+}
+const ZONE_SHORT = { strategy:"Стратегия", finance:"Финансы", execution:"Целеполагание", people:"Люди", customer:"Клиенты", decisions:"Решения", ai:"ИИ" };
+
+// лепестковая диаграмма по семи зонам — чистый SVG, без библиотек
+/* =========================================================
+   PDF — сборка заключения в файл на стороне клиента.
+   window.print() в песочнице артефакта заблокирован, поэтому
+   рендерим заключение в canvas, режем на страницы A4 и отдаём
+   файл через capability downloads.
+   ========================================================= */
+const PDF_VARS = {
+  "--paper":"#FFFFFF", "--surface":"#FFFFFF", "--surface-2":"#F2F4F3", "--ink":"#111111", "--ink-soft":"#555555",
+  "--line":"#CCCCCC", "--accent":"#2F6F6B", "--accent-ink":"#FFFFFF", "--accent-soft":"#DCEAE8",
+  "--strong":"#3E7A54", "--mid":"#B98A2E", "--weak":"#C1703A", "--crit":"#A63B34",
+  "--strong-bg":"#E4F0E7", "--mid-bg":"#F5ECDA", "--weak-bg":"#F6E3D6", "--crit-bg":"#F2DBD8", "--shadow":"none"
+};
+
+function loadLib(src){
+  return new Promise((resolve, reject)=>{
+    const s = document.createElement("script");
+    s.src = src; s.async = true;
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error("cdn"));
+    document.head.appendChild(s);
+  });
+}
+
+// оформление лепестковой диаграммы задано CSS-классами и переменными;
+// при растеризации они не наследуются, поэтому проставляем атрибуты явно
+function paintSvgForPdf(root){
+  root.querySelectorAll("svg.radar").forEach(svg=>{
+    svg.setAttribute("width","420"); svg.setAttribute("height","300");
+    svg.querySelectorAll(".grid").forEach(el=>{
+      el.setAttribute("fill","none"); el.setAttribute("stroke", PDF_VARS["--line"]);
+    });
+    svg.querySelectorAll(".shape").forEach(el=>{
+      el.setAttribute("fill", PDF_VARS["--accent"]); el.setAttribute("fill-opacity","0.16");
+      el.setAttribute("stroke", PDF_VARS["--accent"]); el.setAttribute("stroke-width","2");
+    });
+    svg.querySelectorAll(".pt").forEach(el=> el.setAttribute("fill", PDF_VARS["--accent"]));
+    svg.querySelectorAll("text").forEach(el=>{
+      el.setAttribute("fill", PDF_VARS["--ink-soft"]);
+      el.setAttribute("font-family","IBM Plex Sans, sans-serif");
+    });
+  });
+}
+
+// ищем пустую строку пикселей выше идеального разреза, чтобы страница не рвала текст
+function cutPoint(ctx, width, ideal, floor){
+  const step = Math.max(2, Math.floor(width/160));
+  for(let y = ideal; y > floor; y--){
+    const row = ctx.getImageData(0, y, width, 1).data;
+    let clean = true;
+    for(let x = 0; x < width; x += step){
+      const i = x*4;
+      if(row[i] < 246 || row[i+1] < 246 || row[i+2] < 246){ clean = false; break; }
+    }
+    if(clean) return y;
+  }
+  return ideal;
+}
+
+async function makePdfBlob(){
+  if(!window.html2canvas) await loadLib("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+  if(!window.jspdf)       await loadLib("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+
+  const source = document.getElementById("conclusion");
+  if(!source) throw new Error("no-conclusion");
+
+  const stage = document.createElement("div");
+  stage.style.cssText = "position:fixed; left:-12000px; top:0; width:794px; background:#fff; padding:38px 44px; box-sizing:border-box;";
+  Object.keys(PDF_VARS).forEach(k=> stage.style.setProperty(k, PDF_VARS[k]));
+
+  const clone = source.cloneNode(true);
+  const head = clone.querySelector(".concl-head"); if(head) head.style.display = "block";
+  const appx = clone.querySelector(".concl-appendix"); if(appx) appx.open = true;
+  clone.querySelectorAll(".no-print").forEach(el=> el.remove());
+  paintSvgForPdf(clone);
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const rawH  = stage.scrollHeight;
+    const scale = Math.max(1, Math.min(2, 14000/Math.max(rawH,1)));   // держим канвас в пределах лимита браузера
+    const canvas = await html2canvas(stage, { scale, backgroundColor:"#ffffff", logging:false, useCORS:true, windowWidth:794 });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit:"pt", format:"a4", compress:true });
+    const pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight();
+    const m = 30, uw = pw - m*2, uh = ph - m*2;
+    const k = canvas.width / uw;                  // пикселей канваса на пункт PDF
+    const pageH = Math.floor(uh * k);
+    const ctx = canvas.getContext("2d", { willReadFrequently:true });
+
+    let y = 0, first = true;
+    while(y < canvas.height){
+      let h = Math.min(pageH, canvas.height - y);
+      if(y + h < canvas.height){
+        h = cutPoint(ctx, canvas.width, y + h, y + Math.floor(pageH*0.72)) - y;
+      }
+      const part = document.createElement("canvas");
+      part.width = canvas.width; part.height = h;
+      part.getContext("2d").drawImage(canvas, 0, y, canvas.width, h, 0, 0, canvas.width, h);
+      if(!first) pdf.addPage();
+      pdf.addImage(part.toDataURL("image/jpeg", 0.85), "JPEG", m, m, uw, h/k);
+      first = false; y += h;
+    }
+    return pdf.output("blob");
+  } finally {
+    stage.remove();
+  }
+}
+
+function radarSvg(zonesCalc){
+  const W = 420, H = 300, cx = W/2, cy = H/2, R = 95, LR = R + 16, n = zonesCalc.length;
+  const ang = i => (-Math.PI/2) + i * 2*Math.PI/n;
+  const pt = (i, r) => [cx + Math.cos(ang(i))*r, cy + Math.sin(ang(i))*r];
+  const ring = r => zonesCalc.map((_,i)=>pt(i,r).map(v=>v.toFixed(1)).join(",")).join(" ");
+
+  const grids = [0.25,0.5,0.75,1].map(k=>`<polygon class="grid" points="${ring(R*k)}"/>`).join("");
+  const spokes = zonesCalc.map((_,i)=>{ const [x,y]=pt(i,R); return `<line class="grid" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; }).join("");
+  const shape = `<polygon class="shape" points="${zonesCalc.map((z,i)=>pt(i, R*Math.max(z.pct,2)/100).map(v=>v.toFixed(1)).join(",")).join(" ")}"/>`;
+  const dots = zonesCalc.map((z,i)=>{ const [x,y]=pt(i, R*Math.max(z.pct,2)/100); return `<circle class="pt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3"/>`; }).join("");
+  const labels = zonesCalc.map((z,i)=>{
+    const [x,y] = pt(i, LR);
+    const anchor = Math.abs(x-cx) < 14 ? "middle" : (x > cx ? "start" : "end");
+    return `<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="${anchor}" font-size="10.5">${ZONE_SHORT[z.key]||z.title}</text>`;
+  }).join("");
+
+  const legend = zonesCalc.map(z=>{
+    const c = z.pct>=75?"var(--strong)":z.pct>=55?"var(--mid)":z.pct>=35?"var(--weak)":"var(--crit)";
+    return `<div><span>${ZONE_SHORT[z.key]||z.title}</span><b style="color:${c}">${z.pct}%</b></div>`;
+  }).join("");
+
+  return `<div class="radar-wrap">
+    <svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="Профиль зрелости по семи зонам управляемости">
+      ${grids}${spokes}${shape}${dots}${labels}
+    </svg>
+    <div class="radar-legend">${legend}</div>
+  </div>`;
+}
+
+function zoneBand(pct){ return pct>=75 ? "strong" : pct>=55 ? "mid" : "weak"; }
+function zoneBandLabel(pct){ return pct>=75 ? "Сильная зона" : pct>=55 ? "Рабочий уровень" : "Слабая зона"; }
+
+function riskBlocks(r){
+  if(r.triggered.length){
+    return r.triggered.map((t,i)=>`<div class="concl-risk"><span class="rk-tag">${i===0?"Главный риск":"Риск "+(i+1)}</span><b>${t.risk}</b> ${t.detail}</div>`).join("");
+  }
+  const w = r.weakZones[0];
+  if(w){
+    return `<div class="concl-risk mid"><span class="rk-tag">Главный риск</span><b>Самая слабая зона — ${w.title} (${w.pct}%).</b> Критических разрывов тест не обнаружил, но эта зона заметно слабее остальных. ${w.subtitle}. С неё стоит начать.</div>`;
+  }
+  return `<div class="concl-risk ok"><span class="rk-tag">Риски</span><b>Явных системных рисков тест не обнаружил.</b> По всем семи зонам ответы держатся на уровне работающей практики. Как любой результат самооценки, его стоит время от времени сверять с фактами, а не только с памятью.</div>`;
+}
+
+function buildConclusion(r, code){
+  const today = new Date().toLocaleDateString("ru-RU", {day:"numeric", month:"long", year:"numeric"});
+  const lvl = r.level;
+  const flagsLine = r.triggered.length
+    ? `Тест зафиксировал ${r.triggered.length} ${plural(r.triggered.length,["критический разрыв","критических разрыва","критических разрывов"])} — это места, где отсутствие практики уже создаёт измеримый риск, а не просто отставание от лучшего варианта.`
+    : `Критических разрывов, при которых отсутствие практики создаёт немедленный риск, тест не зафиксировал.`;
+  const zonesLine = r.weakZones.length
+    ? `Слабых зон: ${r.weakZones.length} из ${ZONES.length} — ${r.weakZones.map(z=>z.title).join(", ")}. Сильных зон: ${r.strongZones.length}.`
+    : `Слабых зон тест не выявил: по всем ${ZONES.length} зонам ответы держатся на уровне работающей практики.`;
+
+  return `<div class="conclusion" id="conclusion">
+  <div class="concl-head">
+    <div class="concl-meta mono">КРАТКОЕ ЗАКЛЮЧЕНИЕ О ЗРЕЛОСТИ СИСТЕМЫ УПРАВЛЕНИЯ · ${today}</div>
+    <h2 class="concl-title">Уровень ${lvl.num} из 5 — ${lvl.name}</h2>
+    <div class="concl-scoreline mono">Взвешенный балл: ${r.overallPct} / 100 · ${TOTAL_QUESTIONS} ${plural(TOTAL_QUESTIONS,["вопрос","вопроса","вопросов"])} · 7 зон управляемости</div>
+    <table class="concl-profile">
+      <tr><td>Роль</td><td>${profileText("PR1")}</td><td>Численность</td><td>${profileText("PR2")}</td></tr>
+      <tr><td>Возраст бизнеса</td><td>${profileText("PR3")}</td><td>Тип бизнеса</td><td>${profileText("PR4")}</td></tr>
+      <tr><td>Юр. структура</td><td>${profileText("PR5")}</td><td>Код</td><td class="mono">${code}</td></tr>
+    </table>
+  </div>
+
+  <h3>Что означает этот уровень</h3>
+  <p>${lvl.portrait}</p>
+  <p>${zonesLine} ${flagsLine}</p>
+
+  <h3 class="concl-sectiontitle">Профиль по семи зонам</h3>
+  ${radarSvg(r.zonesCalc)}
+
+  <h3 class="concl-sectiontitle">Риски</h3>
+  ${riskBlocks(r)}
+
+  <div class="invite">
+    <h3>Полный разбор результата с экспертом</h3>
+    <p>Краткое заключение показывает, где система управления проседает. На разборе эксперт пройдёт по каждой зоне: почему она просела, где компания теряет деньги, что делать в первую очередь и как перейти на следующий уровень.</p>
+    <div class="codebox"><span>Код вашего результата</span><b class="mono">${code.replace(/-/g,"-<wbr>")}</b></div>
+    <p class="small">Напишите в Telegram <b>@${CONFIG.telegram}</b> и пришлите этот код — по нему эксперт увидит все ваши ответы. Сами ответы никуда не отправлялись и нигде не хранятся: код — единственный способ их передать.</p>
+  </div>
+
+  ${AUTHORS_HTML("inpdf", "Авторы методики Management OS + AI")}
+
+  <p class="note concl-note">Заключение построено на ответах участника и не является аудитом: часть выводов невозможно подтвердить без первичных данных и интервью. Взвешенный балл отражает соотношение зон управляемости по их влиянию на устойчивость бизнеса и предназначен для сравнения зон между собой, а не для сравнения компаний. Документ сформирован автоматически по методике MOS-EST-03, редакция 4.1.</p>
+  </div>`;
+}
+
+/* ---------- RESULT RENDER ---------- */
+function renderResult(){
+  const r = computeResult();
+  const code = encodeResult();
+  const tgText = encodeURIComponent("Здравствуйте! Хочу разобрать результат диагностики Management OS. Код результата: " + code);
+  const tgHref = `https://t.me/${CONFIG.telegram}?text=${tgText}`;
+
+  app.innerHTML = `
+  <div class="screen card">
+    <div class="eyebrow"><span class="dot"></span>РЕЗУЛЬТАТ</div>
+    <h2>Уровень ${r.level.num} из 5 — ${r.level.name}</h2>
+    <p class="scoreline mono">${r.overallPct} / 100 · взвешенный балл по семи зонам · ${r.headline.toLowerCase()}</p>
+    ${buildConclusion(r, code)}
+
+    <div class="btnrow no-print">
+      <button class="btn-primary" id="pdf-btn">Скачать заключение в PDF</button>
+      <a class="btn btn-ghost" href="${tgHref}" target="_blank" rel="noopener">Разобрать результат с экспертами</a>
+    </div>
+    <p class="minor-actions no-print"><button class="linkbtn" id="copy-btn">Скопировать код результата</button></p>
+
+    <hr class="sep">
+    <p class="note">Это не диагноз, а проверяемая гипотеза о типе управляемости бизнеса — на основе ваших собственных ответов. Окончательная картина уточняется на разборе с экспертом Management OS.</p>
+    <div class="footer-note"><button class="btn-ghost" id="restart">Пройти тест заново</button></div>
+  </div>`;
+
+  document.getElementById("pdf-btn").onclick = (e)=> pdfButton(e.currentTarget, "management-os-diagnostika.pdf", "PDF сохранён");
+  document.getElementById("copy-btn").onclick = async ()=>{
+    try{ await navigator.clipboard.writeText(code); toast("Код скопирован"); }
+    catch(e){ toast("Не удалось скопировать — перепишите код из заключения"); }
+  };
+  document.getElementById("restart").onclick = ()=>{
+    state.screen="intro"; state.qIndex=0; state.profile={}; state.answers={};
+    state.confidenceQuestions=null; state.confidenceNotes={};
+    window.scrollTo(0,0); render();
+  };
+}
+
+render();
+</script>
+
+
+</body></html>
+</body>
+</html>
